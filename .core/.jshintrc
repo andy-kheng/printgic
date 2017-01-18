@@ -1,0 +1,10 @@
+{
+    "esnext": true,
+    "strict": true,
+    "indent": 4,
+    "node": true,
+    "curly": false,
+    "predef": [
+        "printgic", "describe", "it"
+    ]
+}

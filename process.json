@@ -1,0 +1,18 @@
+{
+    "apps": [{
+        "name": "printgic",
+        "script": "./index.js",
+        "watch": false,
+        "max_memory_restart": "1500M",
+        "instances": "max",
+        "exec_mode": "cluster",
+        "log_date_format": "YYYY-MM-DD HH:mm Z",
+        "env": {
+            "DEBUG": "printgic:*,acleda:*",
+            "NODE_ENV": "development"
+        },
+        "env_production": {
+            "DEBUG": ""
+        }
+    }]
+}

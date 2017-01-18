@@ -1,0 +1,9 @@
+/node_modules/
+/var/
+/.idea/
+/npm-debug.log
+/public/resources/
+/newrelic.js
+/.strong-pm/
+/config/
+.vscode
