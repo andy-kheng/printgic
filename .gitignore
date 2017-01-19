@@ -6,6 +6,7 @@
 /.core/node_modules/
 /config/production/
 /public/doc/
+/public/uploads/
 /var/
 /doc/apidoc.json
 /.idea

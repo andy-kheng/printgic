@@ -8,13 +8,31 @@ module.exports = (db, DataTypes) => {
         email: {
             type: DataTypes.STRING
         },
-        phonenumber: {
+        username: {
+            type: DataTypes.STRING
+        },
+        phone_number: {
             type: DataTypes.STRING
         },
         password: {
             type: DataTypes.STRING
         },
+        address: {
+            type: DataTypes.STRING
+        },
         auth_token: {
+            type: DataTypes.STRING
+        },
+        status: {
+            type: DataTypes.STRING
+        },
+        role_id: {
+            type: DataTypes.INTEGER
+        },
+        last_login: {
+            type: DataTypes.DATE
+        },
+        hash: {
             type: DataTypes.STRING
         },
         refresh_token: {

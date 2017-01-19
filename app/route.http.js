@@ -8,6 +8,11 @@ module.exports = {
             method: 'POST'
         }, {
             before: ['Auth@authorized'],
+            handler: 'Auth@signin',
+            path: '/signin',
+            method: 'POST'
+        }, {
+            before: ['Auth@authorized'],
             handler: 'Auth@verify',
             path: '/verify',
             method: 'POST'
@@ -31,7 +36,7 @@ module.exports = {
     upload: {
         prefix: '/upload',
         routes: [{
-            // before: ['Auth@authorized', 'Auth@authenticated'],
+            before: ['Auth@authorized', 'Auth@authenticated'],
             handler: 'Upload@create',
             path: '/',
             method: 'POST'

@@ -35,6 +35,7 @@ module.exports = {
         }
         try {
             const payload = yield jwt.verifyAsync(token);
+            log('payload: ', payload);
 
             const client = yield db.users.find({
                 where: { email: payload.email }
@@ -45,7 +46,7 @@ module.exports = {
                 this.bad({ message: 'Client was not found' });
             }
         } catch ({ name: errorName }) {
-            // log(`Error ${errorName}`);
+            log(`Error ${errorName}`);
             if (errorName === 'JsonWebTokenError') {
                 this.bad({ message: 'Access token is invalid' });
             } else if (errorName === 'TokenExpiredError') {
