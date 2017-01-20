@@ -68,16 +68,37 @@ module.exports = {
         let urlImage = this.req.headers.host + '/uploads/';
         const dir = path.resolve(__dirname, '../../public/uploads') + '/';
         let log = debug('printgic:controller:upload:upload');
-        let pathImage = path.resolve(__dirname, '../../public/uploads/test.jpg');
-        let origin = path.resolve(__dirname, '../../public/uploads/upload_3b3767ed848ca0ea898280394148de72.png');
-        let files = this.req.files;
-        console.log(files);
+        let pathImage = path.resolve(__dirname, '../../public/uploads/test1.jpg');
+        // let origin = path.resolve(__dirname, '../../public/uploads/upload_3b3767ed848ca0ea898280394148de72.png');
+        // let files = this.req.files;
+        // console.log(files);
         let { width, height } = this.req.fields;
-        if (!files) return this.bad({ message: 'file is required' });
+        //if (!files) return this.bad({ message: 'file is required' });
 
-        const filePath = files.file.path;
+        //const filePath = files.file.path;
         let image = [`${dir}1.png`, `${dir}2.png`, `${dir}3.png`, `${dir}4.png`];
 
+
+        // let pic = gm(500, 500, "white");
+        // // rectangle 1
+        // pic.fill('white');
+        // pic.stroke("#6C68FF", 1);
+        // pic.drawRectangle(30, 40, 200, 400, 10, 10);
+
+        // // rectangle 2
+        // pic.fill('white');
+        // pic.stroke("#FF6C68", 1);
+        // pic.drawRectangle(240, 40, 400, 400);
+        // pic.writeAsync(pathImage);
+        yield gm(image[0])
+            .montage(image[1])
+            // .blur('+200+300')
+            .montage(image[2])
+            .montage(image[3])
+            .geometry('+100+100')
+            .writeAsync(pathImage);
+
+        this.ok();
 
         // let image = image_size(filePath);
         // this.ok(image_size);
@@ -85,17 +106,17 @@ module.exports = {
         try {
             // yield gm(width, height, "#ffffff")
             //     .writeAsync(pathImage);
-            let result = yield gm()
-                .in('-page', '+15+24') // Custom place for each of the images
+            let result = yield gm(dir + 'test.png')
+                .in('-page', '+36+40') // Custom place for each of the images
                 .in(image[0])
                 .resize(254, 407, "!")
-                .in('-page', '+278+24') // Custom place for each of the images
+                .in('-page', '+296+40') // Custom place for each of the images
                 .in(image[1])
                 .resize(254, 407, "!")
-                .in('-page', '+544+24') // Custom place for each of the images
+                .in('-page', '+563+24') // Custom place for each of the images
                 .in(image[2])
                 .resize(254, 407, "!")
-                .in('-page', '+808+24') // Custom place for each of the images
+                .in('-page', '+829+24') // Custom place for each of the images
                 .in(image[3])
                 .resize(254, 407, "!")
                 // .minify() // Halves the size, 512x512 -> 256x256
