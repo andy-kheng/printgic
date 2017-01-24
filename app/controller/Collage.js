@@ -15,6 +15,9 @@ module.exports = {
         let layout = yield db.layout.find({
             attributes: {
                 exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
+            },
+            where: {
+                id: 2
             }
         });
         layout = layout.toJSON();
@@ -62,11 +65,19 @@ module.exports = {
             raw: true
         });
         layout.layout_item = layout_item;
+        console.log(layout);
         // ------------------------------------------
 
         try {
-            yield gm(layout.width, layout.height, layout.background_color)
-                .writeAsync(pathImage);
+            if (layout.background_color) {
+                yield gm(layout.width, layout.height, layout.background_color)
+                    .writeAsync(pathImage);
+            } else {
+                yield gm(dir + layout.background_image)
+                    .resize(layout.width, layout.height)
+                    .writeAsync(pathImage);
+            }
+
 
             let layout_items = layout.layout_item;
             for (let i in layout_items) {
