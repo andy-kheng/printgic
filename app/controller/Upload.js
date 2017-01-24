@@ -6,8 +6,7 @@ const path = require('path');
 const uuid = require('node-uuid');
 const progress = require('progress-stream');
 const fs = require('fs');
-const image_size = require('image-size');
-let co = require('co');
+const db = printgic.database;
 
 Promise.promisifyAll(gm.prototype);
 
@@ -44,28 +43,15 @@ module.exports = {
     },
     * upload() {
         let urlImage = this.req.headers.host + '/uploads/';
-        let log = debug('printgic:controller:upload:upload');
-        let file = this.req.file;
-        let { width, height } = this.body;
-        yield gm(dir + 'test.png')
-            .composite(value.image)
-            .geometry(`+${value.x}+${value.y}`)
-            .writeAsync(pathImage);
-        let pathImage = path.resolve(__dirname, '../../public/uploads/' + uuid.v4() + file.originalname)
-        try {
-            let result = yield gm(file.buffer, file.originalnamer)
-                .highlightColor("red")
-                .writeAsync(pathImage);
-            let success = {
-                success: true,
-                file: {
-                    path: urlImage + path.basename(pathImage)
-                }
-            };
-            this.ok(success);
-        } catch (err) {
-            this.bad({ mesage: err.message });
-        }
+        let log = debug('printgic:controller:upload:create');
+        let files = this.req.files;
+        let { width, height } = this.req.fields;
+        if (!files) return this.bad({ message: 'file is required' });
+        const filePath = files.file.path;
+        let success = {
+            image_path: urlImage + path.basename(filePath)
+        };
+        this.ok(success);
     },
     * test() {
         let urlImage = this.req.headers.host + '/uploads/';
@@ -172,6 +158,7 @@ module.exports = {
 
         };
 
+
         try {
             // yield gm(width, height, "#ffffff")
             //     .writeAsync(pathImage);
@@ -255,5 +242,65 @@ module.exports = {
         } catch (err) {
             this.bad({ mesage: err.message });
         }
+    },
+    * collage() {
+        let urlImage = this.req.headers.host + '/uploads/';
+        const dir = path.resolve(__dirname, '../../public/uploads') + '/';
+        let log = debug('printgic:controller:upload:upload');
+        let pathImage = path.resolve(__dirname, '../../public/uploads/collage_test.png');
+
+        // ---------------- query layout ----------
+        let layout = yield db.layout.find({
+            attributes: {
+                exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
+            }
+        });
+        layout = layout.toJSON();
+        let layout_item = yield db.layout_item.findAll({
+            attributes: {
+                exclude: ['layout_id', 'created_date', 'updated_date', 'status']
+            },
+            where: { layout_id: layout.id },
+            raw: true
+        });
+        layout.layout_item = layout_item;
+        // ------------------------------------------
+
+        let image_path = dir + 'pic4.png';
+        try {
+            yield gm(layout.width, layout.height, layout.background_color)
+                .writeAsync(pathImage);
+
+            let images = layout.layout_item;
+            for (let i in images) {
+                let image = images[i];
+                let positions = image.position.split('|');
+                let position = positions[0].split('-');
+
+                yield gm(image_path)
+                    .resize(image.width, image.height, '!')
+                    .blur(10, 10)
+                    .quality(100)
+                    .writeAsync(image_path);
+
+                yield gm(pathImage)
+                    .composite(image_path)
+                    .geometry(`+${position[0]}+${position[1]}`)
+                    .quality(100)
+                    .writeAsync(pathImage);
+
+            }
+
+            let success = {
+                success: true,
+                file: {
+                    path: urlImage + path.basename(pathImage)
+                }
+            };
+            this.ok(success);
+        } catch (err) {
+            this.bad({ mesage: err.message });
+        }
+
     }
 };

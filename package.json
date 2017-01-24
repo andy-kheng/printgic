@@ -41,7 +41,7 @@
     "image-size": "^0.5.1",
     "indicative": "^2.2.1",
     "jsonwebtoken": "^7.1.9",
-    "lodash": "^4.16.4",
+    "lodash": "^4.17.4",
     "moment": "^2.13.0",
     "multer": "^1.2.0",
     "mysql": "^2.11.1",
@@ -49,6 +49,7 @@
     "path": "^0.12.7",
     "progress-stream": "^1.2.0",
     "sequelize": "^3.24.4",
-    "shortid": "^2.2.6"
+    "shortid": "^2.2.6",
+    "underscore": "^1.8.3"
   }
 }

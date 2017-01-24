@@ -42,12 +42,28 @@ module.exports = {
             method: 'POST'
         }, {
             handler: 'Upload@upload',
-            path: '/do',
+            path: '/image',
             method: 'POST'
         }, {
             handler: 'Upload@test',
             path: '/test',
             method: 'POST'
+        }, {
+            handler: 'Upload@collage',
+            path: '/collage',
+            method: 'POST'
+        }]
+    },
+    collage: {
+        prefix: '/collage',
+        routes: [{
+            handler: 'Collage@collage',
+            path: '/',
+            method: 'get'
+        }, {
+            handler: 'Collage@crateCollage',
+            path: '/:layout_id',
+            method: 'post'
         }]
     }
 };

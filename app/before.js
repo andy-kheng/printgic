@@ -22,7 +22,7 @@ module.exports = {
             // multiples: true, // req.files to be arrays of files
         }));
         // printgic.components.app.use(multer().single('file'));
-        printgic.components.app.use(bodyParser.json({ limit: '20mb' }));
+        // printgic.components.app.use(bodyParser.json({ limit: '20mb' }));
         printgic.components.app.use(validator);
     },
     database() {},
