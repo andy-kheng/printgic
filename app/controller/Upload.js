@@ -15,11 +15,12 @@ module.exports = {
         console.log('start ------------------');
         let urlImage = this.req.headers.host + '/uploads/';
         let log = debug('printgic:controller:upload:create');
-        let files = this.req.files;
-        let { width, height } = this.req.fields;
+        let files = this.req.file;
+        console.log(files);
+        let { width, height } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
 
-        const filePath = files.file.path;
+        const filePath = files.path;
 
         // let pathImage = path.resolve(__dirname, '../../public/uploads/' + uuid.v4() + path.basename(filePath));
         let pathImage = path.resolve(__dirname, '../../public/uploads/scaled-' + path.basename(filePath));
@@ -27,14 +28,13 @@ module.exports = {
         try {
             let result = yield gm(filePath)
                 .scale(width, height, '!')
+                .edge(10)
                 .writeAsync(pathImage);
             let success = {
-                success: true,
-                file: {
                     original_path: urlImage + path.basename(filePath),
                     scaled_path: urlImage + path.basename(pathImage)
-                }
-            };
+                };
+                
             printgic.memStore.share.publish('CHN:adsfe', JSON.stringify(success));
             this.ok(success);
         } catch (err) {
@@ -44,10 +44,10 @@ module.exports = {
     * upload() {
         let urlImage = this.req.headers.host + '/uploads/';
         let log = debug('printgic:controller:upload:create');
-        let files = this.req.files;
-        let { width, height } = this.req.fields;
+        let files = this.req.file;
+        let { width, height } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
-        const filePath = files.file.path;
+        const filePath = files.path;
         let success = {
             image_path: urlImage + path.basename(filePath)
         };
@@ -61,7 +61,7 @@ module.exports = {
         // let origin = path.resolve(__dirname, '../../public/uploads/upload_3b3767ed848ca0ea898280394148de72.png');
         // let files = this.req.files;
         // console.log(files);
-        let { width, height } = this.req.fields;
+        let { width, height } = this.req.body;
         //if (!files) return this.bad({ message: 'file is required' });
 
         //const filePath = files.file.path;

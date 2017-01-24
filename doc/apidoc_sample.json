@@ -1,16 +1,16 @@
 {
-    "name": "apidoc-printgic",
-    "version": "0.3.0",
-    "description": "apidoc printgic",
-    "title": "Custom apiDoc browser title",
-    "url": "https://api.github.com/v1",
-    "sampleUrl": "https://api.github.com/v1",
+    "name": "apidoc-Printgic",
+    "version": "0.0.1",
+    "description": "apidoc Printgic",
+    "title": "Printgic",
+    "url": "http://localhost:4000",
+    "sampleUrl": "http://localhost:4000",
     "header": {
-        "title": "My own header title",
+        "title": "",
         "filename": "header.md"
     },
     "footer": {
-        "title": "My own footer title",
+        "title": "",
         "filename": "footer.md"
     },
     "template": {

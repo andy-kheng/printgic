@@ -1,3 +1,4 @@
+
 /**
  * @api {POST} /collage/:layout_id Create collage
  * @apiName create-collage
@@ -10,7 +11,7 @@
  *    "layout_items": [
  *          {
  *              "layout_item_id": 1,
- *              "image_path": "192.168.17.89:4000/uploads/pic2.png"*
+ *              "image_path": "192.168.17.89:4000/uploads/pic2.png"
  *          },
  *          {
  *              "layout_item_id": 2,
@@ -24,24 +25,27 @@
  * }
  */
 /**
- * @api {POST} /v1/payments/transactions/commit Commit transaction
- * @apiName transaction-commit
- * @apiGroup Transaction
- * @apiUse authenticatedHeaders
- * @apiParam {String} txid The transaction ID.
- * @apiParam {String} security_code The validation code of the user.
- * @apiParam {String} signature A signature is a way to prevent data from being tampered with.<br>
- * A signature is a <b>hash</b> with a combination of <code>client_uid + client_id + client_secret + total_amt + total_qty + ip</code>
- *  using <b style="color: brown">SHA1</b> algorithm with encoding <b style="color: purple">base64</b>
+ * @api {GET} /collage get collage
+ * @apiName get-collage
+ * @apiGroup Collage
  * @apiParamExample {json} Request example
  * {
- * 	   "txid": 445,
- * 	   "signature": "3xmPRt46WqqvacLZWU90wLNUN8c=",
- * 	   "security_code": "23340"
  * }
  * @apiSuccessExample {json} Success response:
  * {
- *     "state": "completed",
- *     "uid": "d6d3ef26e16147999fb7f884b4f0c4cc"
+ *   "id": 1,
+ *   "width": 2480,
+ *   "height": 3508,
+ *   "background_image": null,
+ *   "background_color": "#ffffff",
+ *   "layout_item": [
+ *     {
+ *       "id": 1,
+ *       "width": 7457,
+ *       "height": 875754,
+ *       "position": "7457"
+ *     }
+ *   ],
+ *   "layout_sample": "localhost:3000/uploads/collage.png"
  * }
  */

@@ -17,9 +17,12 @@ module.exports = {
                 exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
             },
             where: {
-                id: 2
+                id: 1
             }
         });
+        if(!layout){
+            this.ok({mesage:'no data'});
+        }
         layout = layout.toJSON();
 
         let layout_item = yield db.layout_item.findAll({
@@ -35,7 +38,7 @@ module.exports = {
     },
     * crateCollage() {
         let layout_id = this.params.layout_id;
-        let body = this.req.fields;
+        let body = this.req.body;
 
         let urlImage = this.req.headers.host + '/uploads/';
         let dir = path.resolve(__dirname, '../../public/uploads') + '/';
@@ -56,6 +59,10 @@ module.exports = {
             where: { id: layout_id }
         });
 
+        if(!layout){
+            this.bad({mesage:`cannot find layout with this id`});
+        }
+
         layout = layout.toJSON();
         let layout_item = yield db.layout_item.findAll({
             attributes: {
@@ -65,7 +72,7 @@ module.exports = {
             raw: true
         });
         layout.layout_item = layout_item;
-        console.log(layout);
+
         // ------------------------------------------
 
         try {
