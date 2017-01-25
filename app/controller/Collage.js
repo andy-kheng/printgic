@@ -12,28 +12,29 @@ module.exports = {
         let log = debug('printgic:controller:upload:upload');
         const dir = path.resolve(__dirname, '../../public/uploads') + '/';
         const urlImage = this.req.headers.host + '/uploads/';
-        let layout = yield db.layout.find({
+        let layout = yield db.layout.findAll({
             attributes: {
                 exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
-            },
-            where: {
-                id: 1
             }
         });
-        if(!layout){
-            this.ok({mesage:'no data'});
-        }
-        layout = layout.toJSON();
+        // layout = layout.toJSON();
+        for (let i = 0; i < layout.length; i++) {
+            layout[i] = layout[i].toJSON();
+            let layout_id = layout[i].id;
 
-        let layout_item = yield db.layout_item.findAll({
-            attributes: {
-                exclude: ['layout_id', 'created_date', 'updated_date', 'status']
-            },
-            where: { layout_id: layout.id },
-            raw: true
-        });
-        layout.layout_item = layout_item;
-        layout.layout_sample = urlImage + 'collage.png';
+            if (layout[i].background_image)
+                layout[i].background_image = urlImage + layout[i].background_image;
+
+            let layout_item = yield db.layout_item.findAll({
+                attributes: {
+                    exclude: ['layout_id', 'created_date', 'updated_date', 'status']
+                },
+                where: { layout_id: layout_id }
+            });
+
+            layout[i].layout_item = layout_item;
+        }
+
         this.ok(layout);
     },
     * crateCollage() {
@@ -59,8 +60,8 @@ module.exports = {
             where: { id: layout_id }
         });
 
-        if(!layout){
-            this.bad({mesage:`cannot find layout with this id`});
+        if (!layout) {
+            this.bad({ mesage: `cannot find layout with this id` });
         }
 
         layout = layout.toJSON();

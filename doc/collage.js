@@ -1,4 +1,3 @@
-
 /**
  * @api {POST} /collage/:layout_id Create collage
  * @apiName create-collage
@@ -40,11 +39,17 @@
  *   "background_color": "#ffffff",
  *   "layout_item": [
  *     {
- *       "id": 1,
- *       "width": 7457,
- *       "height": 875754,
- *       "position": "7457"
- *     }
+ *      "id": 1,
+ *      "width": "1140",
+ *      "height": "3408",
+ *      "position": "50-50|1230-50"
+ *    },
+ *    {
+ *      "id": 2,
+ *      "width": "1140",
+ *      "height": "3408",
+ *      "position": "1290-50|2475-50"
+ *    }
  *   ],
  *   "layout_sample": "localhost:3000/uploads/collage.png"
  * }

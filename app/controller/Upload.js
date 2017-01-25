@@ -1,7 +1,7 @@
 /* global printgic */
 const Promise = require('bluebird');
 const debug = require('debug');
-const gm = require('gm');
+const gm = require('gm').subClass({ imageMagick: true });
 const path = require('path');
 const uuid = require('node-uuid');
 const progress = require('progress-stream');
@@ -16,7 +16,9 @@ module.exports = {
         let urlImage = this.req.headers.host + '/uploads/';
         let log = debug('printgic:controller:upload:create');
         let files = this.req.file;
-        console.log(files);
+        let body = this.req.body;
+        console.log('file', files);
+        console.log('body', body);
         let { width, height } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
 
@@ -28,13 +30,12 @@ module.exports = {
         try {
             let result = yield gm(filePath)
                 .scale(width, height, '!')
-                .edge(10)
                 .writeAsync(pathImage);
             let success = {
-                    original_path: urlImage + path.basename(filePath),
-                    scaled_path: urlImage + path.basename(pathImage)
-                };
-                
+                original_path: urlImage + path.basename(filePath),
+                scaled_path: urlImage + path.basename(pathImage)
+            };
+
             printgic.memStore.share.publish('CHN:adsfe', JSON.stringify(success));
             this.ok(success);
         } catch (err) {
@@ -63,6 +64,24 @@ module.exports = {
         // console.log(files);
         let { width, height } = this.req.body;
         //if (!files) return this.bad({ message: 'file is required' });
+
+        yield gm(`${dir}k.png`)
+            .resize(200, 200, '!')
+            .writeAsync(`${dir}cicle.png`);
+
+        // yield gm(200, 200, 'none')
+        //     .fill(`${dir}cicle.png`)
+        //     .stroke("#94E81E")
+        //     .drawCircle(200 / 2, 200 / 2, 200 / 2, 0)
+        //     .writeAsync(`${dir}cicle.png`);
+
+        yield gm(200, 200, '#ffffff')
+            .fill(`${dir}cicle.png`)
+            .stroke("#94E81E", 5)
+            .drawRectangle(3, 3, 200 / 1.02, 200 / 1.02, 5, 5)
+            .writeAsync(`${dir}cicle.png`);
+
+        this.ok();
 
         //const filePath = files.file.path;
         // let background = dir + 'test.png';
