@@ -36,7 +36,7 @@ module.exports = {
     upload: {
         prefix: '/upload',
         routes: [{
-            // before: ['Auth@authorized', 'Auth@authenticated'],
+            before: ['Auth@authorized', 'Auth@authenticated'],
             handler: 'Upload@create',
             path: '/',
             method: 'POST'

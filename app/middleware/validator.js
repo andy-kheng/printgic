@@ -1,6 +1,7 @@
 const assert = require('chai').assert;
 const indicative = require('indicative');
 
+const customRules = require('../utils/custom_rules');
 
 module.exports = (req, res, next) => {
     /**
@@ -13,7 +14,10 @@ module.exports = (req, res, next) => {
     req.validate = function*(data, rules, messages = {}) {
         assert.isObject(data, 'validate first param must be an object');
         assert.isObject(rules, 'validate second param must be an object');
+
         // Extends custom rules
+        indicative.extend('uniqueEmail', customRules.uniqueEmail);
+
         messages = Object.assign(messages, {
             'alpha_numeric': messages.alpha_numeric || 'The {{field}} field can only contain letters and numbers',
             'above': messages.above || 'The {{field}} field must be bigger than {{argument.0}}',
@@ -29,8 +33,7 @@ module.exports = (req, res, next) => {
         try {
             yield indicative.validateAll(data, rules, messages);
         } catch (errors) {
-            res.fail({ messages: 'Validation failed', errors });
-            return errors;
+            throw res.fail({ messages: 'Validation failed', errors });
         }
     };
     next();

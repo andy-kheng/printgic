@@ -6,13 +6,13 @@ const formidable = require('express-formidable');
 const path = require('path');
 const validator = require('./middleware/validator');
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve(__dirname, '../public/uploads')); // Absolute path. Folder must exist, will not be created for you.
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-})
+    destination: function(req, file, cb) {
+        cb(null, path.resolve(__dirname, '../public/uploads')); // Absolute path. Folder must exist, will not be created for you.
+    },
+    filename: function(req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
 
 module.exports = {
     model() {},
@@ -29,7 +29,7 @@ module.exports = {
         //     uploadDir: path.resolve(__dirname, '../public/uploads'),
         //     // multiples: true, // req.files to be arrays of files
         // }));
-        printgic.components.app.use(multer({storage: storage}).single('file'));
+        printgic.components.app.use(multer({ storage: storage }).single('file'));
         printgic.components.app.use(bodyParser.json());
         printgic.components.app.use(validator);
     },

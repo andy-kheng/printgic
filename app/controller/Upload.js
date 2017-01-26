@@ -13,6 +13,7 @@ Promise.promisifyAll(gm.prototype);
 module.exports = {
     * create() {
         console.log('start ------------------');
+        this.ok();
         let urlImage = this.req.headers.host + '/uploads/';
         let log = debug('printgic:controller:upload:create');
         let files = this.req.file;

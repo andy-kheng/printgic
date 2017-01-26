@@ -26,19 +26,17 @@ module.exports = {
             this.bad({ message: 'X-Auth header is missing' });
             return;
         }
+        log(`X-Auth: ${xAuth}`);
 
-        // log(`X-Auth: ${xAuth}`);
         const [tokenType, token] = xAuth.split(/ /);
         if (tokenType !== 'Bearer') {
             this.bad({ message: 'Access token type is invalid' });
             return;
         }
         try {
-            const payload = yield jwt.verifyAsync(token);
-            log('payload: ', payload);
-
+            const result = yield jwt.verifyAsync(token);
             const client = yield db.users.find({
-                where: { email: payload.email }
+                where: { email: result.email }
             });
             if (client) {
                 this.auth = client.toJSON();
