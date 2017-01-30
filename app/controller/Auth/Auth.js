@@ -9,7 +9,7 @@ const utils = printgic.utils;
 
 
 module.exports = {
-    * create() {
+    * register() {
         const log = debug('printgic:controller:auth:authenticate');
         const body = this.req.body;
         log('body', body);

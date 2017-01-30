@@ -24,7 +24,7 @@
  * }
  */
 /**
- * @api {GET} /collage get collage
+ * @api {GET} /collage Get collage
  * @apiName get-collage
  * @apiGroup Collage
  * @apiParamExample {json} Request example

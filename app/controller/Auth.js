@@ -1,7 +1,7 @@
-const { create, verify, signin } = require('./Auth/Auth');
+const { register, verify, signin } = require('./Auth/Auth');
 
 module.exports = {
-    create,
+    register,
     verify,
     signin
 };

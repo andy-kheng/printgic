@@ -3,8 +3,8 @@ module.exports = {
         prefix: '/v1/oauth',
         routes: [{
             before: ['Auth@authorized'],
-            handler: 'Auth@create',
-            path: '/create',
+            handler: 'Auth@register',
+            path: '/register',
             method: 'POST'
         }, {
             before: ['Auth@authorized'],
