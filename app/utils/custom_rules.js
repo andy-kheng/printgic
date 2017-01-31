@@ -12,7 +12,7 @@ module.exports = {
             // log('data', data);
             // log('emailValue', email);
             if (!email) return resolve('validation skipped');
-            db.users
+            db.user
                 .find({
                     where: { email }
                 })

@@ -47,13 +47,17 @@ module.exports = {
         let urlImage = this.req.headers.host + '/uploads/';
         let log = debug('printgic:controller:upload:create');
         let files = this.req.file;
-        let { width, height } = this.req.body;
+        let { width, height, position_x, position_y } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
         const filePath = files.path;
+        yield gm(filePath)
+            .crop(width, height, position_x, position_y)
+            .quality(100)
+            .writeAsync(filePath);
         let success = {
             image_path: urlImage + path.basename(filePath)
         };
-        this.ok(success);
+        return this.ok(success);
     },
     * test() {
         let urlImage = this.req.headers.host + '/uploads/';

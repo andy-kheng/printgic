@@ -12,9 +12,8 @@ module.exports = {
             path: '/signin',
             method: 'POST'
         }, {
-            before: ['Auth@authorized'],
-            handler: 'Auth@verify',
-            path: '/verify',
+            handler: 'Auth@refreshToken',
+            path: '/refresh-token',
             method: 'POST'
         }]
     },

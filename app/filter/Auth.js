@@ -35,7 +35,8 @@ module.exports = {
         }
         try {
             const result = yield jwt.verifyAsync(token);
-            const client = yield db.users.find({
+            log('result ', result);
+            const client = yield db.user.find({
                 where: { email: result.email }
             });
             if (client) {

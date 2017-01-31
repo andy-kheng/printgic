@@ -1,5 +1,5 @@
 module.exports = (db, DataTypes) => {
-    const users = db.define('users', {
+    const user = db.define('user', {
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
             primaryKey: true,
@@ -44,5 +44,5 @@ module.exports = (db, DataTypes) => {
             type: DataTypes.INTEGER
         }
     });
-    return users;
+    return user;
 };

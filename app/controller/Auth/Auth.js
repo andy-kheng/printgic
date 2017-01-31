@@ -5,6 +5,7 @@ const moment = require('moment');
 const jwt = require('../../utils/jwt');
 const db = printgic.database;
 const utils = printgic.utils;
+const expiresIn = 500;
 
 
 
@@ -20,38 +21,59 @@ module.exports = {
         body.password = utils.hash(body.password);
         body.refresh_token = utils.uuidV4();
 
-        const user = yield db.users.create(body);
+        const user = yield db.user.create(body);
         this.ok(user);
 
     },
-    * verify() {
+    * refreshToken() {
         const log = debug('printgic:controller:auth:verify');
-        const { authentication } = this.req.headers;
-        const expiresIn = 120;
+        const { 'refresh-token': refresh_token } = this.req.headers;
 
-        // we need the authentication header
-        if (!authentication) {
-            this.bad({ message: 'Authentication header is missing' });
+        // we need the refresh_token header
+        if (!refresh_token) {
+            this.bad({ message: 'refresh_token header is missing' });
             return;
         }
+
+        const [tokenType, token] = refresh_token.split(/ /);
+        if (tokenType !== 'Bearer') {
+            this.bad({ message: 'refresh_token type is invalid' });
+            return;
+        }
+
+        const user = yield db.user.find({
+            where: { refresh_token: token },
+            raw: true
+        });
+        log('user: ------', user);
+
+        if (!user) {
+            throw this.bad({ message: 'refresh_token does not exist' });
+        }
+        const response = {
+            email: user.email,
+            username: user.username,
+            phone_number: user.phone_number
+        };
+
         try {
-            const client = yield jwt.verifyAsync(authentication);
-            log('client', client);
-            this.ok(client);
+            response.access_token = yield jwt.signAsync(response, expiresIn);
+            response.refresh_token = user.refresh_token;
+            response.expires_in_sec = moment.duration(expiresIn, 'minutes').asSeconds();
+            this.ok(response);
         } catch (err) {
             this.bad({ message: err.message });
         }
     },
     * signin() {
         const log = debug('printgic:controller:auth:signin');
-        const expiresIn = 500;
 
         // let's validate the request body
         yield validateSignin(this);
 
         const { email, password } = this.req.body;
 
-        const user = yield db.users.find({
+        const user = yield db.user.find({
             where: {
                 $or: [{ email }, { username: email }]
             },
