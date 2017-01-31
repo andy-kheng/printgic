@@ -9,6 +9,11 @@
  * @apiParam {Double} position_y image position (y).
  * @apiParamExample {json} Request example
  * {
+ *  "width": 2480,
+ *  "height": 3508,
+ *  "position_x": 50,
+ *  "position_y": 50,
+ *  "file": "file Location."
  * }
  * @apiSuccessExample {json} Success response:
  * {

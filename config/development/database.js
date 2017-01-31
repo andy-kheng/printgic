@@ -1,7 +1,7 @@
 module.exports = {
-    username: 'printgicdev',
-    password: 'printgic@pm',
-    database: 'printgic',
+    username: 'root',
+    password: '',
+    database: 'printgic_local',
     host: '127.0.0.1',
     port: 3306,
 
