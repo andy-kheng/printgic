@@ -1,9 +1,12 @@
-
 /**
  * @api {POST} /upload/image Upload Image
  * @apiName upload-image
  * @apiGroup Upload
  * @apiParam {String} file file image location.
+ * @apiParam {Double} width image width.
+ * @apiParam {Double} height image height.
+ * @apiParam {Double} position_x image position (x).
+ * @apiParam {Double} position_y image position (y).
  * @apiParamExample {json} Request example
  * {
  * }
