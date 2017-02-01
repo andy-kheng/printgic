@@ -50,12 +50,13 @@ module.exports = {
         let { width, height, position_x, position_y } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
         const filePath = files.path;
+        const new_path = urlImage + 'c_' + path.basename(filePath);
         yield gm(filePath)
             .crop(width, height, position_x, position_y)
             .quality(100)
-            .writeAsync(filePath);
+            .writeAsync(new_path);
         let success = {
-            image_path: urlImage + path.basename(filePath)
+            image_path: new_path
         };
         return this.ok(success);
     },
