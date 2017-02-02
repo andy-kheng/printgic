@@ -7,6 +7,7 @@ const uuid = require('node-uuid');
 const progress = require('progress-stream');
 const fs = require('fs');
 const db = printgic.database;
+const ExifImage = require('exif').ExifImage;
 
 Promise.promisifyAll(gm.prototype);
 
@@ -50,11 +51,15 @@ module.exports = {
         let files = this.req.file;
         let { width, height, position_x, position_y } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
+        yield validateUpload(this);
+
         const filePath = files.path;
+
         const new_path = dir + 'c_' + Date.now() + '.png';
         yield gm(filePath)
             .crop(width, height, position_x, position_y)
             .quality(100)
+            .autoOrient()
             .writeAsync(new_path);
         let success = {
             image_path: urlImage + path.basename(new_path)
@@ -329,4 +334,13 @@ module.exports = {
         }
 
     }
+};
+
+const validateUpload = function*(ctx) {
+    return yield ctx.req.validate(ctx.req.body, {
+        'width': 'required',
+        'height': 'required',
+        'position_x': 'required',
+        'position_y': 'required'
+    }, {});
 };
