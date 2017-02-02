@@ -56,9 +56,9 @@ module.exports = {
 
         const new_path = dir + 'c_' + Date.now() + '.png';
         yield gm(filePath)
+            .autoOrient()
             .crop(width, height, position_x, position_y)
             .quality(100)
-            .autoOrient()
             .writeAsync(new_path);
         let success = {
             image_path: urlImage + path.basename(new_path)
