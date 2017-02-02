@@ -51,7 +51,7 @@ module.exports = {
         let { width, height, position_x, position_y } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
         const filePath = files.path;
-        const new_path = dir + 'c_' + path.basename(filePath);
+        const new_path = dir + 'c_' + Date.now() + '.png';
         yield gm(filePath)
             .crop(width, height, position_x, position_y)
             .quality(100)
