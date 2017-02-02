@@ -5,7 +5,7 @@ const moment = require('moment');
 const jwt = require('../../utils/jwt');
 const db = printgic.database;
 const utils = printgic.utils;
-const expiresIn = 500;
+const expiresIn = 15500;
 
 
 
@@ -99,7 +99,7 @@ module.exports = {
 
         response.access_token = yield jwt.signAsync(response, expiresIn);
         response.refresh_token = user.refresh_token;
-        response.expires_in_sec = moment.duration(expiresIn, 'minutes').asSeconds();
+        // response.expires_in_sec = moment.duration(expiresIn, 'minutes').asSeconds();
         this.ok(response);
     }
 };
