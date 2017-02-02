@@ -7,7 +7,6 @@ const uuid = require('node-uuid');
 const progress = require('progress-stream');
 const fs = require('fs');
 const db = printgic.database;
-const ExifImage = require('exif').ExifImage;
 
 Promise.promisifyAll(gm.prototype);
 
