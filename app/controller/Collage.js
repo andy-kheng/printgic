@@ -8,49 +8,52 @@ const _ = require('lodash');
 Promise.promisifyAll(gm.prototype);
 
 module.exports = {
-    // * collage() {
-    //     let log = debug('printgic:controller:upload:upload');
-    //     const dir = path.resolve(__dirname, '../../public/uploads') + '/';
-    //     const urlImage = this.req.headers.host + '/uploads/';
-    //     let layout = yield db.layout.findAll({
-    //         attributes: {
-    //             exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
-    //         }
-    //     });
-    //     // layout = layout.toJSON();
-    //     for (let i = 0; i < layout.length; i++) {
-    //         layout[i] = layout[i].toJSON();
-    //         let layout_id = layout[i].id;
+    * listCollage() {
+        let log = debug('printgic:controller:upload:upload');
+        const dir = path.resolve(__dirname, '../../public/uploads') + '/';
+        const urlImage = this.req.headers.host + '/uploads/';
+        let layout = yield db.layout.findAll({
+            attributes: {
+                exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
+            }
+        });
+        // layout = layout.toJSON();
+        for (let i = 0; i < layout.length; i++) {
+            layout[i] = layout[i].toJSON();
+            let layout_id = layout[i].id;
 
-    //         if (layout[i].background_image)
-    //             layout[i].background_image = urlImage + layout[i].background_image;
+            if (layout[i].background_image)
+                layout[i].background_image = urlImage + layout[i].background_image;
 
-    //         let layout_item = yield db.layout_item.findAll({
-    //             attributes: {
-    //                 exclude: ['layout_id', 'created_date', 'updated_date', 'status']
-    //             },
-    //             where: { layout_id: layout_id }
-    //         });
+            let layout_item = yield db.layout_item.findAll({
+                attributes: {
+                    exclude: ['layout_id', 'created_date', 'updated_date', 'status']
+                },
+                where: { layout_id: layout_id }
+            });
 
-    //         layout[i].layout_item = layout_item;
-    //     }
+            layout[i].layout_item = layout_item;
+        }
 
-    //     this.ok(layout);
-    // },
+        this.ok(layout);
+    },
     * collage() {
         let log = debug('printgic:controller:upload:upload');
         const dir = path.resolve(__dirname, '../../public/uploads') + '/';
         const urlImage = this.req.headers.host + '/uploads/';
+        let layout_id = this.params.layout_id;
+        if (!layout_id) return this.bad({ message: 'layout_id is required' });
+
         let layout = yield db.layout.find({
             attributes: {
                 exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
             },
             where: {
-                id: 1
+                id: layout_id
             }
         });
         if (!layout) {
-            this.ok({ mesage: 'no data' });
+            this.ok({ message: 'no data' });
         }
         layout = layout.toJSON();
 
@@ -62,7 +65,6 @@ module.exports = {
             raw: true
         });
         layout.layout_item = layout_item;
-        layout.layout_sample = urlImage + 'collage.png';
         this.ok(layout);
     },
     * crateCollage() {

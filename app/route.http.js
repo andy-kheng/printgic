@@ -56,8 +56,12 @@ module.exports = {
     collage: {
         prefix: '/collage',
         routes: [{
-            handler: 'Collage@collage',
+            handler: 'Collage@listCollage',
             path: '/',
+            method: 'get'
+        }, {
+            handler: 'Collage@collage',
+            path: '/:layout_id',
             method: 'get'
         }, {
             handler: 'Collage@crateCollage',
