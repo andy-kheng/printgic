@@ -64,6 +64,9 @@ module.exports = {
             where: { layout_id: layout.id },
             raw: true
         });
+        if (layout.background_image)
+            layout.background_image = urlImage + layout.background_image;
+
         layout.layout_item = layout_item;
         this.ok(layout);
     },
