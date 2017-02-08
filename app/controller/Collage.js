@@ -130,7 +130,7 @@ module.exports = {
                 if (!arr_image[image.id]) {
                     this.bad({ mesage: `cannot find image_path of id: ${image.id}` });
                 }
-                let image_path = dir + path.basename(arr_image[image.id].image_path);
+                const image_path = dir + path.basename(arr_image[image.id].image_path);
 
                 yield gm(image_path)
                     .resize(image.width, image.height, '!')
@@ -144,7 +144,7 @@ module.exports = {
                     .writeAsync(pathImage);
             }
 
-            let success = { image_path: urlImage + path.basename(pathImage) };
+            const success = { image_path: urlImage + path.basename(pathImage) };
             this.ok(success);
         } catch (err) {
             this.bad({ mesage: err.message });
