@@ -101,9 +101,68 @@ module.exports = {
         response.refresh_token = user.refresh_token;
         // response.expires_in_sec = moment.duration(expiresIn, 'minutes').asSeconds();
         this.ok(response);
+    },
+    * socialSignin() {
+        const log = debug('printgic:controller:auth:socialSignin');
+        let user;
+        // let's validate the request body
+        yield validateSocialSignin(this);
+
+        const body = this.req.body;
+        let social = yield db.user_social.find({
+            where: {
+                secret_key: body.secret_key
+            }
+        });
+        if(!social){
+            // body.password = utils.hash(body.password);
+            body.refresh_token = utils.uuidV4();
+            let check_user = yield db.user.find({
+                where: {
+                    email: body.email
+                }
+            });
+            if(!check_user){
+                user = yield db.user.create(body);
+            }else{
+                user = yield db.user.update(body, {
+                    where: {
+                        id: check_user.id
+                    }
+                });
+                user = yield db.user.findById(check_user.id);
+            }
+            const data_user_social = {
+                token: body.token,
+                social_page_cd: body.social_page_cd,
+                secret_key: body.secret_key,
+                user_id: user.id
+            };
+            social = yield db.user_social.create(data_user_social);
+        }else{
+            user = yield db.user.update({
+                username: body.username || null,
+                sex: body.sex || null,
+                image_url: body.image_url || null
+            }, {
+                where: {
+                    id: social.user_id
+                },
+                raw: true
+            });
+            user = yield db.user.findById(social.user_id);
+        }
+        user = user.toJSON();
+        user.expires_in_sec = undefined;
+        const data_login = {
+            email: user.email,
+            username: user.username,
+            phone_number: user.phone_number
+        };
+        user.access_token = yield jwt.signAsync(data_login, expiresIn);
+        this.ok(user);
     }
 };
-
 
 const validateRegister = function*(ctx) {
     return yield ctx.req.validate(ctx.req.body, {
@@ -122,5 +181,14 @@ const validateSignin = function*(ctx) {
     }, {
         'email.required': 'The email field is required',
         'password.required': 'The password field is required'
+    });
+};
+
+const validateSocialSignin = function*(ctx) {
+    return yield ctx.req.validate(ctx.req.body, {
+        'token': 'required',
+        // 'password': 'required',
+        'secret_key': 'required',
+        'social_page_cd': 'required'
     });
 };

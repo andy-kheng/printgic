@@ -1,7 +1,8 @@
-const { register, refreshToken, signin } = require('./Auth/Auth');
+const { register, refreshToken, signin, socialSignin } = require('./Auth/Auth');
 
 module.exports = {
     register,
     refreshToken,
-    signin
+    signin,
+    socialSignin
 };

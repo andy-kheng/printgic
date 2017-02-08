@@ -12,6 +12,11 @@ module.exports = {
             path: '/signin',
             method: 'POST'
         }, {
+            before: ['Auth@authorized'],
+            handler: 'Auth@socialSignin',
+            path: '/social-signin',
+            method: 'POST'
+        }, {
             handler: 'Auth@refreshToken',
             path: '/refresh-token',
             method: 'POST'

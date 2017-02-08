@@ -11,6 +11,9 @@ module.exports = (db, DataTypes) => {
         username: {
             type: DataTypes.STRING
         },
+        sex: {
+            type: DataTypes.STRING
+        },
         phone_number: {
             type: DataTypes.STRING
         },
@@ -42,6 +45,9 @@ module.exports = (db, DataTypes) => {
         },
         expires_in_sec: {
             type: DataTypes.INTEGER
+        },
+        image_url:{
+            type: DataTypes.STRING
         }
     });
     return user;
