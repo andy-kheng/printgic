@@ -7,6 +7,7 @@
 /config/production/
 /public/doc/
 /public/uploads/
+/public/files/
 /var/
 /doc/apidoc.json
 /.idea
