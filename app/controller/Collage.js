@@ -76,7 +76,7 @@ module.exports = {
 
         let urlImage = this.req.headers.host + '/uploads/';
         let dir = path.resolve(__dirname, '../../public/uploads') + '/';
-        let pathImage = path.resolve(__dirname, `../../public/uploads/collage_test_${Date.now()}.png`);
+        let pathImage = path.resolve(__dirname, `../../public/files/collage_test_${Date.now()}.png`);
 
         let arr_image = [];
 
