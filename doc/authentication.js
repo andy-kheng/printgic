@@ -54,7 +54,7 @@
  * @apiParam {String} email email get from social
  * @apiParam {String} token social token
  * @apiParam {String} secret_key social id
- * @apiParam {String="FBK","GGP", "TWT"} social_page_cd socail page_cd        Example: facebook=FBK, Google plus=GGP, Twitter=TWT
+ * @apiParam {String="FBK","GGP", "TWT"} social_page_cd socail page_cd        Example: facebook=FBK, Google plus=GGP, Twitter=TWT, Instagram=ISG
  * @apiParam {String="male","female"} sex sex get from social
  * @apiParam {String} image_url social profile url
  * @apiParamExample {json} Request example
