@@ -1,19 +1,20 @@
 module.exports = (db, DataTypes) => {
-    const category = db.define('category', {
+    const photo_size_item = db.define('photo_size_item', {
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
             primaryKey: true,
             autoIncrement: true
         },
-        name:{
+        photo_size_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false
+        },
+        price:{
             type: DataTypes.STRING
         },
-        description:{
-            type: DataTypes.STRING
-        },
-        category_banner:{
+        total_photo:{
             type: DataTypes.STRING
         }
     });
-    return category;
+    return photo_size_item;
 };

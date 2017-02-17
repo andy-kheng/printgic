@@ -6,17 +6,36 @@ const path = require('path');
 const gm = require('gm');
 const _ = require('lodash');
 Promise.promisifyAll(gm.prototype);
+const dir = path.resolve(__dirname, '../../public/uploads') + '/';
 
 module.exports = {
     * listCollage() {
         let log = debug('printgic:controller:upload:upload');
-        const dir = path.resolve(__dirname, '../../public/uploads') + '/';
         const urlImage = this.req.headers.host + '/uploads/';
-        let layout = yield db.layout.findAll({
-            attributes: {
-                exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
-            }
-        });
+        const { limit, offset, total_photos } = this.req.body;
+        const where = '';
+        let layout;
+        if (total_photos) {
+            layout = yield db.layout.findAll({
+                attributes: {
+                    exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
+                },
+                where: {
+                    total_photos
+                },
+                limit: +limit || this.limit,
+                offset: +offset || this.offset
+            });
+        } else {
+            layout = yield db.layout.findAll({
+                attributes: {
+                    exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
+                },
+                limit: +limit || this.limit,
+                offset: +offset || this.offset
+            });
+        }
+
         // layout = layout.toJSON();
         for (let i = 0; i < layout.length; i++) {
             layout[i] = layout[i].toJSON();
@@ -29,7 +48,7 @@ module.exports = {
                 attributes: {
                     exclude: ['layout_id', 'created_date', 'updated_date', 'status']
                 },
-                where: { layout_id: layout_id }
+                where: { layout_id }
             });
 
             layout[i].layout_item = layout_item;
@@ -39,9 +58,8 @@ module.exports = {
     },
     * collage() {
         let log = debug('printgic:controller:upload:upload');
-        const dir = path.resolve(__dirname, '../../public/uploads') + '/';
         const urlImage = this.req.headers.host + '/uploads/';
-        let layout_id = this.params.layout_id;
+        const layout_id = this.params.layout_id;
         if (!layout_id) return this.bad({ message: 'layout_id is required' });
 
         let layout = yield db.layout.find({
@@ -53,11 +71,12 @@ module.exports = {
             }
         });
         if (!layout) {
-            this.ok({ message: 'no data' });
+            this.bad({ message: 'no data' });
+            return;
         }
         layout = layout.toJSON();
 
-        let layout_item = yield db.layout_item.findAll({
+        const layout_item = yield db.layout_item.findAll({
             attributes: {
                 exclude: ['layout_id', 'created_date', 'updated_date', 'status']
             },
@@ -71,17 +90,16 @@ module.exports = {
         this.ok(layout);
     },
     * crateCollage() {
-        let layout_id = this.params.layout_id;
-        let body = this.req.body;
+        const layout_id = this.params.layout_id;
+        const body = this.req.body;
 
-        let urlImage = this.req.headers.host + '/uploads/';
-        let dir = path.resolve(__dirname, '../../public/uploads') + '/';
-        let pathImage = path.resolve(__dirname, `../../public/files/collage/collage_test_${Date.now()}.png`);
+        const urlImage = this.req.headers.host + '/uploads/';
+        const pathImage = path.resolve(__dirname, `../../public/files/collage/collage_test_${Date.now()}.png`);
 
         let arr_image = [];
 
         if (body.layout_items) {
-            let item_image = body.layout_items;
+            const item_image = body.layout_items;
             arr_image = _.keyBy(item_image, 'layout_item_id');
         }
 
@@ -95,10 +113,11 @@ module.exports = {
 
         if (!layout) {
             this.bad({ mesage: `cannot find layout with this id` });
+            return;
         }
 
         layout = layout.toJSON();
-        let layout_item = yield db.layout_item.findAll({
+        const layout_item = yield db.layout_item.findAll({
             attributes: {
                 exclude: ['layout_id', 'created_date', 'updated_date', 'status']
             },
@@ -120,7 +139,7 @@ module.exports = {
             }
 
 
-            let layout_items = layout.layout_item;
+            const layout_items = layout.layout_item;
             for (let i in layout_items) {
                 let image = layout_items[i];
                 let positions = image.position.split('|');

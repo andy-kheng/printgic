@@ -73,5 +73,25 @@ module.exports = {
             path: '/:layout_id',
             method: 'post'
         }]
+    },
+    category: {
+        prefix: '/category',
+        routes: [{
+            handler: 'Category@listCategory',
+            path: '/',
+            method: 'get'
+        }, {
+            handler: 'Category@category_detail',
+            path: '/:category_id',
+            method: 'get'
+        }]
+    },
+    photo_size: {
+        prefix: '/photo-size',
+        routes: [{
+            handler: 'PhotoSize@listPhotoSizeItem',
+            path: '/:photo_size_id',
+            method: 'get'
+        }]
     }
 };
