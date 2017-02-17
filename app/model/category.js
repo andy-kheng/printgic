@@ -11,6 +11,9 @@ module.exports = (db, DataTypes) => {
         description:{
             type: DataTypes.STRING
         },
+        category_code: {
+            type: DataTypes.STRING
+        },
         category_banner:{
             type: DataTypes.STRING
         }
