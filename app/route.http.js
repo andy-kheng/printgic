@@ -92,6 +92,10 @@ module.exports = {
             handler: 'PhotoSize@listPhotoSizeItem',
             path: '/:photo_size_id',
             method: 'get'
+        },{
+            handler: 'PhotoSize@listPhotoSizeByCategory',
+            path: '/list-by-category-code/:category_code',
+            method: 'get'
         }]
     }
 };

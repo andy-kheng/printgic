@@ -10,10 +10,10 @@ module.exports = (db, DataTypes) => {
             allowNull: false
         },
         price:{
-            type: DataTypes.STRING
+            type: DataTypes.DOUBLE
         },
         total_photo:{
-            type: DataTypes.STRING
+            type: DataTypes.INTEGER
         }
     });
     return photo_size_item;

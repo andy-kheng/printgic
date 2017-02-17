@@ -5,15 +5,14 @@ module.exports = (db, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        category_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false
+        category_code: {
+            type: DataTypes.STRING
         },
         width:{
-            type: DataTypes.STRING
+            type: DataTypes.DOUBLE
         },
         height:{
-            type: DataTypes.STRING
+            type: DataTypes.DOUBLE
         },
         type:{
             type: DataTypes.STRING

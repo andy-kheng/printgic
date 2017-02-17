@@ -12,46 +12,28 @@ module.exports = {
     * listCollage() {
         let log = debug('printgic:controller:upload:upload');
         const urlImage = this.req.headers.host + '/uploads/';
-        const { limit, offset, total_photos } = this.req.body;
-        const where = '';
-        let layout;
-        if (total_photos) {
-            layout = yield db.layout.findAll({
-                attributes: {
-                    exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
-                },
-                where: {
-                    total_photos
-                },
-                limit: +limit || this.limit,
-                offset: +offset || this.offset
-            });
-        } else {
-            layout = yield db.layout.findAll({
-                attributes: {
-                    exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
-                },
-                limit: +limit || this.limit,
-                offset: +offset || this.offset
-            });
-        }
+        const { limit, offset, max_photos, photo_size_id } = this.req.query;
+        let where = {};
 
-        // layout = layout.toJSON();
+        if(max_photos) where.max_photos = max_photos;
+        if(photo_size_id) where.photo_size_id = photo_size_id;
+
+        let layout = yield db.layout.findAll({
+            attributes: {
+                exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
+            },
+            where,
+            limit: +limit || this.limit,
+            offset: +offset || this.offset
+        });
+
         for (let i = 0; i < layout.length; i++) {
             layout[i] = layout[i].toJSON();
-            let layout_id = layout[i].id;
-
             if (layout[i].background_image)
                 layout[i].background_image = urlImage + layout[i].background_image;
 
-            let layout_item = yield db.layout_item.findAll({
-                attributes: {
-                    exclude: ['layout_id', 'created_date', 'updated_date', 'status']
-                },
-                where: { layout_id }
-            });
-
-            layout[i].layout_item = layout_item;
+            if (layout[i].layout_thumbnail)
+                layout[i].layout_thumbnail = urlImage + layout[i].layout_thumbnail;
         }
 
         this.ok(layout);

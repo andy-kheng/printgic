@@ -20,13 +20,16 @@ module.exports = (db, DataTypes) => {
         height: {
             type: DataTypes.DOUBLE
         },
-        total_photos: {
+        max_photos: {
             type: DataTypes.INTEGER
         },
         background_image: {
             type: DataTypes.STRING
         },
         background_color: {
+            type: DataTypes.STRING
+        },
+        layout_thumbnail: {
             type: DataTypes.STRING
         },
         status: {

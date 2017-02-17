@@ -25,5 +25,16 @@ module.exports = {
         photo_size.photo_size_items = photo_size_items;
 
         this.ok(photo_size);
+    },
+
+    * listPhotoSizeByCategory() {
+        let log = debug('printgic:controller:category:list-photo-size-by-category');
+        const { category_code } = this.params;
+
+        const photo_sizes = yield PhotoSize.findAll({
+            where: {category_code}
+        });
+
+        this.ok(photo_sizes);
     }
 };
