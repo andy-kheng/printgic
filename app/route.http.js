@@ -87,7 +87,7 @@ module.exports = {
         }]
     },
     photo_size: {
-        prefix: '/photo-size',
+        prefix: '/photo_size',
         routes: [{
             handler: 'PhotoSize@listPhotoSizeItem',
             path: '/:photo_size_id',
