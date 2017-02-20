@@ -1,21 +1,29 @@
 /* global printgic */
 const debug = require('debug');
 const db = printgic.database;
-const url_path = process.env.URL_PATH;
 const { category: Category, photo_size: PhotoSize } = db;
 
 module.exports = {
     * listCategory() {
         let log = debug('printgic:controller:category:list-category');
+        const urlImage = this.req.headers.host + '/';
         const { limit, offset } = this.req.body;
-
-        log('url_path', url_path);
         const categories = yield Category.findAll({
             limit: +limit || this.limit,
             offset: +offset || this.offset
         });
-
-        this.ok(categories);
+        if(categories){
+            for (let i = 0; i < categories.length; i++) {
+                categories[i] = categories[i].toJSON();
+                if (categories[i].category_banner)
+                    categories[i].category_banner = urlImage + categories[i].category_banner;
+            }
+        }
+        const result = {
+            header_banner: urlImage+'files/MainMenu/First.jpg',
+            categories
+        };
+        this.ok(result);
     },
     * category_detail() {
         let log = debug('printgic:controller:category:list-category');

@@ -1,5 +1,5 @@
 module.exports = (db, DataTypes) => {
-    const category = db.define('category', {
+    const advertisement = db.define('advertisement', {
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
             primaryKey: true,
@@ -11,18 +11,20 @@ module.exports = (db, DataTypes) => {
         description:{
             type: DataTypes.STRING
         },
-        category_code: {
+        start_date: {
+            type: DataTypes.DATE,
+            defaultValue: new Date()
+        },
+        end_date:{
+            type: DataTypes.DATE,
+            defaultValue: new Date()
+        },
+        logo:{
             type: DataTypes.STRING
         },
-        category_banner:{
-            type: DataTypes.STRING
-        },
-        text_color:{
-            type: DataTypes.STRING
-        },
-        category_logo:{
+        banner:{
             type: DataTypes.STRING
         }
     });
-    return category;
+    return advertisement;
 };

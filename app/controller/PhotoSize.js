@@ -6,6 +6,7 @@ const { photo_size: PhotoSize, photo_size_item: PhotoSizeItem } = db;
 module.exports = {
     * listPhotoSizeItem() {
         let log = debug('printgic:controller:category:list-photo-size-items');
+        const urlImage = this.req.headers.host + '/';
         const { limit, offset } = this.req.body;
         const { photo_size_id: photo_size_id = +photo_size_id } = this.params;
 
@@ -16,6 +17,9 @@ module.exports = {
         }
 
         photo_size = photo_size.toJSON();
+        if(photo_size.photo_size_banner){
+            photo_size.photo_size_banner = urlImage+ photo_size.photo_size_banner;
+        }
         const photo_size_items = yield PhotoSizeItem.findAll({
             where: { photo_size_id },
             attributes: {
@@ -29,11 +33,20 @@ module.exports = {
 
     * listPhotoSizeByCategory() {
         let log = debug('printgic:controller:category:list-photo-size-by-category');
+        const urlImage = this.req.headers.host + '/';
         const { category_code } = this.params;
 
         const photo_sizes = yield PhotoSize.findAll({
             where: {category_code}
         });
+
+        if(photo_sizes){
+            for (let i = 0; i < photo_sizes.length; i++) {
+                photo_sizes[i] = photo_sizes[i].toJSON();
+                if (photo_sizes[i].photo_size_banner)
+                    photo_sizes[i].photo_size_banner = urlImage + photo_sizes[i].photo_size_banner;
+            }
+        }
 
         this.ok(photo_sizes);
     }
