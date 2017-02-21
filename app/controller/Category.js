@@ -2,11 +2,10 @@
 const debug = require('debug');
 const db = printgic.database;
 const { category: Category, photo_size: PhotoSize } = db;
-
+const urlImage = 'http://192.168.17.89:4000/';
 module.exports = {
     * listCategory() {
         let log = debug('printgic:controller:category:list-category');
-        const urlImage = this.req.headers.host + '/';
         const { limit, offset } = this.req.body;
         const categories = yield Category.findAll({
             limit: +limit || this.limit,
@@ -17,6 +16,10 @@ module.exports = {
                 categories[i] = categories[i].toJSON();
                 if (categories[i].category_banner)
                     categories[i].category_banner = urlImage + categories[i].category_banner;
+
+                if (categories[i].category_logo)
+                    categories[i].category_logo = urlImage + categories[i].category_logo;
+
             }
         }
         const result = {

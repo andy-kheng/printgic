@@ -7,11 +7,11 @@ const gm = require('gm');
 const _ = require('lodash');
 Promise.promisifyAll(gm.prototype);
 const dir = path.resolve(__dirname, '../../public/uploads') + '/';
+const urlImage = 'http://192.168.17.89:4000/uploads/';
 
 module.exports = {
     * listCollage() {
         let log = debug('printgic:controller:upload:upload');
-        const urlImage = this.req.headers.host + '/uploads/';
         const { limit, offset, max_photos, photo_size_id } = this.req.query;
         let where = {};
 
@@ -40,7 +40,6 @@ module.exports = {
     },
     * collage() {
         let log = debug('printgic:controller:upload:upload');
-        const urlImage = this.req.headers.host + '/uploads/';
         const layout_id = this.params.layout_id;
         if (!layout_id) return this.bad({ message: 'layout_id is required' });
 
@@ -74,8 +73,6 @@ module.exports = {
     * crateCollage() {
         const layout_id = this.params.layout_id;
         const body = this.req.body;
-
-        const urlImage = this.req.headers.host + '/uploads/';
         const pathImage = path.resolve(__dirname, `../../public/files/collage/collage_test_${Date.now()}.png`);
 
         let arr_image = [];
