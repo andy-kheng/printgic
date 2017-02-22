@@ -20,15 +20,15 @@ module.exports = {
      */
     * authenticated() {
         const log = debug('printgic:filter:auth:authenticated');
-        const { 'x-auth': xAuth } = this.req.headers;
+        const { 'access-token': accessToken } = this.req.headers;
 
-        if (!xAuth) {
-            this.bad({ message: 'X-Auth header is missing' });
+        if (!accessToken) {
+            this.bad({ message: 'Access-Token header is missing' });
             return;
         }
-        log(`X-Auth: ${xAuth}`);
+        log(`Access-Token: ${accessToken}`);
 
-        const [tokenType, token] = xAuth.split(/ /);
+        const [tokenType, token] = accessToken.split(/ /);
         if (tokenType !== 'Bearer') {
             this.bad({ message: 'Access token type is invalid' });
             return;

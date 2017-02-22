@@ -6,8 +6,8 @@ const jwt = require('../../utils/jwt');
 const db = printgic.database;
 const utils = printgic.utils;
 const expiresIn = 15500;
-
-
+const randomstring = require('randomstring');
+const mailer = require('../../utils/mailer');
 
 module.exports = {
     * register() {
@@ -20,9 +20,16 @@ module.exports = {
 
         body.password = utils.hash(body.password);
         body.refresh_token = utils.uuidV4();
+        body.status = 'pending';
+        body.role_id = 1;
+        body.verification_code = randomstring.generate({
+            length: 5,
+            charset: 'numeric'
+        });
 
         const user = yield db.user.create(body);
-        this.ok(user);
+        this.ok({message: 'Thank you for register with Printgic. Now please go to your email to activate your account.'});
+        yield mailer.sendVerifyEmail(user);
 
     },
     * refreshToken() {
@@ -89,6 +96,10 @@ module.exports = {
             throw this.bad({ message: 'password in correct' });
         }
 
+        if (user.status === 'pending') {
+            throw this.bad({ message: 'Please check your email to verify your account.' });
+        }
+
         const response = {
             email,
             username: user.username,
@@ -97,10 +108,9 @@ module.exports = {
 
         // log('data:   ', response);
 
-        response.access_token = yield jwt.signAsync(response, expiresIn);
-        response.refresh_token = user.refresh_token;
+        user.access_token = yield jwt.signAsync(response, expiresIn);
         // response.expires_in_sec = moment.duration(expiresIn, 'minutes').asSeconds();
-        this.ok(response);
+        this.ok(user);
     },
     * socialSignin() {
         const log = debug('printgic:controller:auth:socialSignin');
@@ -114,7 +124,7 @@ module.exports = {
                 secret_key: body.secret_key
             }
         });
-        if(!social){
+        if (!social) {
             // body.password = utils.hash(body.password);
             body.refresh_token = utils.uuidV4();
             let check_user = yield db.user.find({
@@ -122,9 +132,9 @@ module.exports = {
                     email: body.email
                 }
             });
-            if(!check_user){
+            if (!check_user) {
                 user = yield db.user.create(body);
-            }else{
+            } else {
                 user = yield db.user.update(body, {
                     where: {
                         id: check_user.id
@@ -139,7 +149,7 @@ module.exports = {
                 user_id: user.id
             };
             social = yield db.user_social.create(data_user_social);
-        }else{
+        } else {
             user = yield db.user.update({
                 username: body.username || null,
                 sex: body.sex || null,
@@ -161,6 +171,27 @@ module.exports = {
         };
         user.access_token = yield jwt.signAsync(data_login, expiresIn);
         this.ok(user);
+    },
+    * verifyEmail() {
+        const log = debug('printgic:controller:auth:verifyemail');
+        yield validateVerifyEmail(this);
+        const {verification_code} = this.req.query;
+        const user = yield db.user.find({
+            where: {
+                verification_code
+            }
+        });
+        if(!user){
+            throw this.bad({ message: 'verification_code does not exist' });
+        }
+        log('user -----------', user);
+        yield db.user.update({
+            status: 'active',
+            verification_code: ''
+        },{
+            where: {verification_code}
+        });
+        this.ok({message: 'Your verify email sucessfully'});
     }
 };
 
@@ -190,5 +221,11 @@ const validateSocialSignin = function*(ctx) {
         // 'password': 'required',
         'secret_key': 'required',
         'social_page_cd': 'required'
+    });
+};
+
+const validateVerifyEmail = function* (ctx) {
+    return yield ctx.req.validate(ctx.req.query, {
+        'verification_code': 'required'
     });
 };

@@ -48,6 +48,12 @@ module.exports = (db, DataTypes) => {
         },
         image_url:{
             type: DataTypes.STRING
+        },
+        verification_code: {
+            type: DataTypes.STRING
+        },
+        recovery_code: {
+            type: DataTypes.STRING
         }
     });
     return user;

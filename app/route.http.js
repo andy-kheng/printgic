@@ -17,9 +17,9 @@ module.exports = {
             path: '/social-signin',
             method: 'POST'
         }, {
-            handler: 'Auth@refreshToken',
-            path: '/refresh-token',
-            method: 'POST'
+            handler: 'Auth@verifyEmail',
+            path: '/verify-email',
+            method: 'get'
         }]
     },
     home: {
@@ -34,6 +34,21 @@ module.exports = {
         }, {
             handler: 'Home@ping',
             path: '/ping',
+            method: 'GET'
+        }]
+    },
+    profile: {
+        prefix: '/profile',
+        routes: [{
+            before: ['Auth@authorized', 'Auth@authenticated'],
+            handler: 'Profile@myProfile',
+            path: '/me',
+            method: 'GET'
+        },
+        {
+            before: ['Auth@authorized', 'Auth@authenticated'],
+            handler: 'Profile@getProfile',
+            path: '/:user_id',
             method: 'GET'
         }]
     },
@@ -96,6 +111,22 @@ module.exports = {
             handler: 'PhotoSize@listPhotoSizeByCategory',
             path: '/list-by-category-code/:category_code',
             method: 'get'
+        }]
+    },
+    recover: {
+        prefix: '/v1/recover',
+        routes: [{
+            handler: 'Recover@recoverPassword',
+            path: '/password',
+            method: 'Post'
+        },{
+            handler: 'Recover@getRecoverCode',
+            path: '/verify-code/:recovery_code',
+            method: 'get'
+        },{
+            handler: 'Recover@setNewPassword',
+            path: '/set-new-password',
+            method: 'put'
         }]
     }
 };
