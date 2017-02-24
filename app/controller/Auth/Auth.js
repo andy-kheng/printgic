@@ -20,7 +20,8 @@ module.exports = {
 
         body.password = utils.hash(body.password);
         body.refresh_token = utils.uuidV4();
-        body.status = 'pending';
+        // body.status = 'pending';
+        body.status = 'active';
         body.role_id = 1;
         body.verification_code = randomstring.generate({
             length: 5,
@@ -28,8 +29,9 @@ module.exports = {
         });
 
         const user = yield db.user.create(body);
-        this.ok({message: 'Thank you for register with Printgic. Now please go to your email to activate your account.'});
-        yield mailer.sendVerifyEmail(user);
+        // this.ok({message: 'Thank you for register with Printgic. Now please go to your email to activate your account.'});
+        this.ok(user);
+        // yield mailer.sendVerifyEmail(user);
 
     },
     * refreshToken() {
@@ -127,6 +129,7 @@ module.exports = {
         if (!social) {
             // body.password = utils.hash(body.password);
             body.refresh_token = utils.uuidV4();
+            body.status = 'active';
             let check_user = yield db.user.find({
                 where: {
                     email: body.email

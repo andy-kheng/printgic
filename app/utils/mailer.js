@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer');
 /**
  * local dependencies
  */
-const from = 'andy.kheng@pathmazing.com';
+const from = 'printgic@noreply.com';
 const smtpConfig = printgic.app.config.smtpConfig;
 const transporter = nodemailer.createTransport(smtpConfig);
 const verifyLink = 'http://192.168.17.89:4000/v1/oauth/verify-email';

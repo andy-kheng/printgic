@@ -15,8 +15,8 @@ module.exports = {
         const { limit, offset, max_photos, photo_size_id } = this.req.query;
         let where = {};
 
-        if(max_photos) where.max_photos = max_photos;
-        if(photo_size_id) where.photo_size_id = photo_size_id;
+        if (max_photos) where.max_photos = max_photos;
+        if (photo_size_id) where.photo_size_id = photo_size_id;
 
         let layout = yield db.layout.findAll({
             attributes: {
@@ -34,6 +34,16 @@ module.exports = {
 
             if (layout[i].layout_thumbnail)
                 layout[i].layout_thumbnail = urlImage + layout[i].layout_thumbnail;
+
+            let layout_id = layout[i].id;
+            let layout_item = yield db.layout_item.findAll({
+                attributes: {
+                    exclude: ['layout_id', 'created_date', 'updated_date', 'status']
+                },
+                where: { layout_id }
+            });
+
+            layout[i].layout_item = layout_item;
         }
 
         this.ok(layout);

@@ -3,6 +3,8 @@ const debug = require('debug');
 const db = printgic.database;
 const { photo_size: PhotoSize, photo_size_item: PhotoSizeItem } = db;
 const urlImage = 'http://192.168.17.89:4000/';
+const converter = require('../utils/converter');
+
 module.exports = {
     * listPhotoSizeItem() {
         let log = debug('printgic:controller:category:list-photo-size-items');
@@ -19,6 +21,9 @@ module.exports = {
         if(photo_size.photo_size_banner){
             photo_size.photo_size_banner = urlImage+ photo_size.photo_size_banner;
         }
+        photo_size.width_pixel = yield converter.cmToPixel(photo_size.width);
+        photo_size.height_pixel = yield converter.cmToPixel(photo_size.height);
+
         const photo_size_items = yield PhotoSizeItem.findAll({
             where: { photo_size_id },
             attributes: {

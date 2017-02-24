@@ -75,11 +75,7 @@ const validateEmail = function* (ctx) {
         'email': 'required'
     });
 };
-const validateRecoveryCode = function* (ctx) {
-    return yield ctx.req.validate(ctx.req.query, {
-        'recovery_code': 'required'
-    });
-};
+
 const validatesetNewPassword = function* (ctx) {
     return yield ctx.req.validate(ctx.req.body, {
         'recovery_code': 'required',
