@@ -11,16 +11,12 @@ const db = printgic.database;
 Promise.promisifyAll(gm.prototype);
 
 module.exports = {
-    * create() {
-        console.log('start ------------------');
-        this.ok();
+    * uplaodAndResize() {
         let urlImage = this.req.headers.host + '/uploads/';
-        let log = debug('printgic:controller:upload:create');
+        let log = debug('printgic:controller:upload:uplaodAndResize');
         let files = this.req.file;
         let body = this.req.body;
-        console.log('file', files);
-        console.log('body', body);
-        let { width, height } = this.req.body;
+        const { width, height } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
 
         const filePath = files.path;
@@ -43,12 +39,12 @@ module.exports = {
             this.bad({ mesage: err.message });
         }
     },
-    * upload() {
+    * uploadAndCrop() {
         let urlImage = this.req.headers.host + '/uploads/';
         const dir = path.resolve(__dirname, '../../public/uploads') + '/';
-        let log = debug('printgic:controller:upload:create');
-        let files = this.req.file;
-        let { width, height, position_x, position_y } = this.req.body;
+        let log = debug('printgic:controller:upload:uploadAndCrop');
+        const files = this.req.file;
+        const { width, height, position_x, position_y } = this.req.body;
         if (!files) return this.bad({ message: 'file is required' });
         yield validateUpload(this);
 
@@ -60,10 +56,10 @@ module.exports = {
             .crop(width, height, position_x, position_y)
             .quality(100)
             .writeAsync(new_path);
-        let success = {
+
+        return this.ok({
             image_path: urlImage + path.basename(new_path)
-        };
-        return this.ok(success);
+        });
     },
     * test() {
         let urlImage = this.req.headers.host + '/uploads/';

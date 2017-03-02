@@ -56,11 +56,11 @@ module.exports = {
         prefix: '/upload',
         routes: [{
             before: ['Auth@authorized', 'Auth@authenticated'],
-            handler: 'Upload@create',
+            handler: 'Upload@uplaodAndResize',
             path: '/',
             method: 'POST'
         }, {
-            handler: 'Upload@upload',
+            handler: 'Upload@uploadAndCrop',
             path: '/image',
             method: 'POST'
         }, {

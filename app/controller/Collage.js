@@ -13,43 +13,43 @@ module.exports = {
     * listCollage() {
         let log = debug('printgic:controller:upload:upload');
         const { limit, offset, max_photos, photo_size_id } = this.req.query;
-        let where = {};
 
+        const where = {};
         if (max_photos) where.max_photos = max_photos;
         if (photo_size_id) where.photo_size_id = photo_size_id;
 
-        let layout = yield db.layout.findAll({
+        const layouts = yield db.layout.findAll({
             attributes: {
                 exclude: ['name', 'description', 'user_id', 'created_date', 'updated_date', 'status']
             },
             where,
+            raw: true,
             limit: +limit || this.limit,
             offset: +offset || this.offset
         });
 
-        for (let i = 0; i < layout.length; i++) {
-            layout[i] = layout[i].toJSON();
-            if (layout[i].background_image)
-                layout[i].background_image = urlImage + layout[i].background_image;
+        layouts.forEach(layout => {
+            layout.background_image = layout.background_image ? urlImage + layout.background_image : '';
+            layout.layout_thumbnail = layout.layout_thumbnail ? urlImage + layout.layout_thumbnail : '';
+        });
 
-            if (layout[i].layout_thumbnail)
-                layout[i].layout_thumbnail = urlImage + layout[i].layout_thumbnail;
+        const layoutIds  = layouts.map(layout => layout.id);
+        log('layoutIds', layoutIds);
 
-            let layout_id = layout[i].id;
-            let layout_item = yield db.layout_item.findAll({
-                attributes: {
-                    exclude: ['layout_id', 'created_date', 'updated_date', 'status']
-                },
-                where: { layout_id }
-            });
+        const layoutItems = yield db.layout_item.findAll({
+            attributes: {
+                exclude: ['created_date', 'updated_date', 'status']
+            },
+            raw: true,
+            where: { layout_id: { $in: layoutIds } }
+        });
+        log('layoutItems', layoutItems);
 
-            layout[i].layout_item = layout_item;
-        }
-
-        this.ok(layout);
+        layouts.forEach(layout => layout.layout_item = layoutItems.filter(layoutItem => layoutItem.layout_id === layout.id)); // --> forEach mutate
+        this.ok(layouts);
     },
     * collage() {
-        let log = debug('printgic:controller:upload:upload');
+        let log = debug('printgic:controller:Collage:collageDetail');
         const layout_id = this.params.layout_id;
         if (!layout_id) return this.bad({ message: 'layout_id is required' });
 
@@ -130,7 +130,7 @@ module.exports = {
 
             const layout_items = layout.layout_item;
             for (let i in layout_items) {
-                let image = layout_items[i];
+                let image = layout_items;
                 let positions = image.position.split('|');
                 let position = positions[0].split('-');
                 let layout_item_id = image.id;
